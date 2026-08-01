@@ -1109,9 +1109,26 @@ header.scrolled .nav-toggle span {
 }
 
 .fleet-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2.5rem;
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 1.5rem;
+}
+
+.fleet-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.fleet-grid::-webkit-scrollbar-track {
+    background: rgba(0, 75, 141, 0.05);
+    border-radius: 4px;
+}
+
+.fleet-grid::-webkit-scrollbar-thumb {
+    background: var(--color-primary-light);
+    border-radius: 4px;
 }
 
 .fleet-card {
@@ -1123,6 +1140,8 @@ header.scrolled .nav-toggle span {
     display: flex;
     flex-direction: column;
     height: 100%;
+    flex: 0 0 320px;
+    scroll-snap-align: start;
 }
 
 .fleet-card:hover {
