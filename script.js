@@ -771,6 +771,20 @@ document.addEventListener('DOMContentLoaded', () => {
 ---------------------------------------
 _Sent via website booking form._`;
 
+                // Send email notification via Web3Forms
+                const formData = new FormData(bookingForm);
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Web3Forms response:", data);
+                })
+                .catch(error => {
+                    console.error("Web3Forms error:", error);
+                });
+
                 // URL encode & navigate to WhatsApp api
                 const waPhone = '917620306718';
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(formattedMsg)}`;
@@ -884,6 +898,20 @@ _Requesting local expert trip planning assistance._`;
 
                 const waPhone = '917620306718';
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(popupMsg)}`;
+
+                // Send email notification via Web3Forms
+                const formData = new FormData(popupForm);
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Web3Forms response:", data);
+                })
+                .catch(error => {
+                    console.error("Web3Forms error:", error);
+                });
 
                 closeEnquiryModal();
                 window.open(whatsappUrl, '_blank');
