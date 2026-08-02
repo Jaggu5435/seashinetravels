@@ -176,14 +176,15 @@ section {
 }
 
 .btn-primary {
-    background: var(--grad-sunset);
+    background: linear-gradient(135deg, #E5A93C 0%, #F39C12 100%);
     color: var(--color-white);
-    box-shadow: 0 8px 24px rgba(229, 169, 60, 0.25);
+    box-shadow: 0 6px 20px rgba(229, 169, 60, 0.35);
+    border: none;
 }
 
 .btn-primary:hover {
-    box-shadow: 0 12px 32px rgba(229, 169, 60, 0.4);
-    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(229, 169, 60, 0.5);
+    transform: translateY(-3px);
 }
 
 .btn-outline {
@@ -764,19 +765,25 @@ header.scrolled .nav-toggle span {
     border-top: 1px solid rgba(0, 45, 98, 0.05);
     padding-top: 1rem;
     margin-top: auto;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .badge-tag {
-    display: inline-block;
-    background: rgba(255, 111, 60, 0.1);
-    color: var(--color-accent);
-    padding: 0.35rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(229, 169, 60, 0.15) 0%, rgba(245, 197, 100, 0.25) 100%);
+    color: #B37612;
+    padding: 0.4rem 0.8rem;
     border-radius: var(--radius-pill);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border: 1px solid rgba(255, 111, 60, 0.2);
+    border: 1px solid rgba(229, 169, 60, 0.3);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5);
+    text-align: center;
 }
 
 /* ==========================================
@@ -2971,6 +2978,23 @@ footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.75rem;
+    }
+    
+    .card-footer, .tour-card-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .card-footer .badge-tag, .tour-card-footer .badge-tag {
+        align-self: flex-start;
+        width: fit-content;
+    }
+    
+    .card-footer .btn-sm, .tour-card-footer .btn-sm {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
     }
 }
 
