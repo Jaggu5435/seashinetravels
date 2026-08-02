@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
             navMenu.classList.toggle('open');
         });
 
-        navLinks.forEach(link => {
+        // Close menu when clicking ANY link inside the nav menu (including CTA)
+        const allNavLinks = navMenu.querySelectorAll('a');
+        allNavLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navToggle.classList.remove('open');
                 navMenu.classList.remove('open');
@@ -259,6 +261,183 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pane) pane.classList.add('active');
         });
     });
+
+    /* ==========================================
+       PREMIUM FLEET CAROUSEL
+    ========================================== */
+    const fleetTrack = document.getElementById('fleet-track');
+    const fleetSlides = document.querySelectorAll('#fleet-track .carousel-slide');
+    const fleetPrevBtn = document.getElementById('fleet-prev');
+    const fleetNextBtn = document.getElementById('fleet-next');
+    const fleetDots = document.querySelectorAll('#fleet-dots .carousel-indicator');
+    const fleetTitle = document.querySelector('.carousel-active-title');
+    const fleetCounter = document.getElementById('current-slide-num');
+    
+    if (fleetTrack && fleetSlides.length > 0) {
+        let currentFleetIndex = 0;
+        let fleetAutoPlayTimer;
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+
+        const vehicleTitles = [
+            'Premium SUV',
+            'Luxury Sedan',
+            'Luxury Mini Coach',
+            'Premium Hatchback',
+            'Tata Winger',
+            'Force Urbania',
+            'Toyota Rumion'
+        ];
+
+        function setTrackPosition() {
+            fleetTrack.style.transform = `translateX(${currentTranslate}%)`;
+        }
+
+        function updateFleetCarousel() {
+            prevTranslate = currentFleetIndex * -100;
+            currentTranslate = prevTranslate;
+            setTrackPosition();
+            
+            fleetDots.forEach((dot, index) => {
+                dot.classList.toggle('current-indicator', index === currentFleetIndex);
+            });
+            
+            if (fleetCounter) {
+                fleetCounter.textContent = String(currentFleetIndex + 1).padStart(2, '0');
+            }
+            
+            if (fleetTitle && vehicleTitles[currentFleetIndex]) {
+                fleetTitle.textContent = vehicleTitles[currentFleetIndex];
+            }
+        }
+
+        function nextFleetSlide() {
+            currentFleetIndex = (currentFleetIndex + 1) % fleetSlides.length;
+            updateFleetCarousel();
+        }
+
+        function prevFleetSlide() {
+            currentFleetIndex = (currentFleetIndex - 1 + fleetSlides.length) % fleetSlides.length;
+            updateFleetCarousel();
+        }
+
+        if (fleetNextBtn) {
+            fleetNextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fleetTrack.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                nextFleetSlide();
+                resetFleetAutoPlay();
+                startFleetAutoPlay(); // Restart timer after manual click
+            });
+        }
+
+        if (fleetPrevBtn) {
+            fleetPrevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fleetTrack.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                prevFleetSlide();
+                resetFleetAutoPlay();
+                startFleetAutoPlay();
+            });
+        }
+
+        fleetDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                fleetTrack.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                currentFleetIndex = index;
+                updateFleetCarousel();
+                resetFleetAutoPlay();
+                startFleetAutoPlay();
+            });
+        });
+
+        function touchStart(event) {
+            isDragging = true;
+            startPos = getPositionX(event);
+            animationID = requestAnimationFrame(animation);
+            fleetTrack.style.transition = 'none'; 
+            resetFleetAutoPlay();
+        }
+
+        function touchMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                const diff = currentPosition - startPos;
+                const viewportWidth = document.querySelector('.premium-fleet-carousel').clientWidth;
+                const movePercentage = (diff / viewportWidth) * 100;
+                currentTranslate = prevTranslate + movePercentage;
+            }
+        }
+
+        function touchEnd() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            fleetTrack.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+
+            const movedBy = currentTranslate - prevTranslate;
+
+            if (movedBy < -15 && currentFleetIndex < fleetSlides.length - 1) currentFleetIndex += 1;
+            if (movedBy > 15 && currentFleetIndex > 0) currentFleetIndex -= 1;
+            
+            if (movedBy < -15 && currentFleetIndex === fleetSlides.length - 1 && movedBy < -40) {
+                 currentFleetIndex = 0;
+            }
+            if (movedBy > 15 && currentFleetIndex === 0 && movedBy > 40) {
+                currentFleetIndex = fleetSlides.length - 1;
+            }
+
+            updateFleetCarousel();
+            startFleetAutoPlay();
+        }
+
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+
+        function animation() {
+            if (isDragging) {
+                setTrackPosition();
+                requestAnimationFrame(animation);
+            }
+        }
+
+        fleetTrack.addEventListener('touchstart', touchStart, {passive: true});
+        fleetTrack.addEventListener('touchend', touchEnd);
+        fleetTrack.addEventListener('touchmove', touchMove, {passive: true});
+
+        fleetTrack.addEventListener('mousedown', touchStart);
+        fleetTrack.addEventListener('mouseup', touchEnd);
+        fleetTrack.addEventListener('mouseleave', () => {
+            if(isDragging) touchEnd();
+        });
+        fleetTrack.addEventListener('mousemove', touchMove);
+
+        function startFleetAutoPlay() {
+            if (!fleetAutoPlayTimer) {
+                fleetAutoPlayTimer = setInterval(() => {
+                    fleetTrack.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                    nextFleetSlide();
+                }, 5000);
+            }
+        }
+
+        function resetFleetAutoPlay() {
+            clearInterval(fleetAutoPlayTimer);
+            fleetAutoPlayTimer = null;
+        }
+
+        const carouselContainer = document.querySelector('.premium-fleet-carousel');
+        if (carouselContainer) {
+            carouselContainer.addEventListener('mouseenter', resetFleetAutoPlay);
+            carouselContainer.addEventListener('mouseleave', startFleetAutoPlay);
+            carouselContainer.addEventListener('touchstart', resetFleetAutoPlay, {passive: true});
+        }
+
+        startFleetAutoPlay();
+    }
 
     /* ==========================================
        CUSTOMER REVIEWS CAROUSEL
