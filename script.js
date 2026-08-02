@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
 _Sent via website booking form._`;
 
                 // URL encode & navigate to WhatsApp api
-                const waPhone = '919529137785';
+                const waPhone = '917620306718';
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(formattedMsg)}`;
                 
                 window.open(whatsappUrl, '_blank');
@@ -882,7 +882,7 @@ _Sent via website booking form._`;
 ---------------------------------------
 _Requesting local expert trip planning assistance._`;
 
-                const waPhone = '919529137785';
+                const waPhone = '917620306718';
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(popupMsg)}`;
 
                 closeEnquiryModal();

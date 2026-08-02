@@ -1204,7 +1204,8 @@ header.scrolled .nav-toggle span {
 
 @media (max-width: 767px) {
     .slide-img-wrapper {
-        height: 350px;
+        height: auto;
+        aspect-ratio: 16/9;
     }
 }
 
